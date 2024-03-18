@@ -15,6 +15,8 @@ contract Dappazon {
         uint256 stock;
     }
     mapping(uint256=>Item)public items;
+
+    event Buy(address buyer,uint256 orderId,uint256 itemId);
     event List(string name,uint256 code,uint quantity);
 
     struct Order{
@@ -49,6 +51,9 @@ contract Dappazon {
 
         // fetch the items
         Item memory item=items[_id];
+        
+        require(msg.value>=item.price,"Not enough ether");
+        require(item.stock>0,"Item out of stock");
 
         // create an order
         Order memory order=Order(block.timestamp,item);
@@ -61,8 +66,11 @@ contract Dappazon {
         items[_id].stock=item.stock-1;
 
         // emit event
+        emit Buy(msg.sender,orderCount[msg.sender],_id);
     }
-
-
-    // withdraw funds
+    // withdraw funds FROM THE CONTRACT AND GIVE IT TO THE OWNERp
+    function withdraw() public{
+        require(msg.sender==owner,"Only owner can withdraw funds");
+        payable(owner).transfer(address(this).balance);
+    }
 }
