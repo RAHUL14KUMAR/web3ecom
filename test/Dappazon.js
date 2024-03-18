@@ -62,4 +62,12 @@ describe("Dappazon", async() => {
     const res=await dappazon.orderCount(buyer.address);
     expect(res.toNumber()).to.equal(1);
   })
+
+  it("add the order",async()=>{
+    await transaction.wait();
+    transaction=await dappazon.connect(buyer).buy(1,{value:tokens(1)})
+    const order=await dappazon.orders(buyer.address,1);
+    expect(order.time).to.be.greaterThan(0);
+    expect(order.item.name).to.equal("shoes");
+  })
 })
