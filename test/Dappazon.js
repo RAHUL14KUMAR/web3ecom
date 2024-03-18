@@ -7,6 +7,7 @@ describe("Dappazon", async() => {
   let dappazon;
   let deployer,buyer;
   let transaction;
+  let balanceBefore;
 
   beforeEach(async()=>{
     // account setup
@@ -27,6 +28,9 @@ describe("Dappazon", async() => {
       4,
       5
     );
+
+    // get deployer balance before
+    balanceBefore=await ethers.provider.getBalance(deployer.address);
   })
 
   it("set the owner of contract",async()=>{
@@ -69,5 +73,22 @@ describe("Dappazon", async() => {
     const order=await dappazon.orders(buyer.address,1);
     expect(order.time).to.be.greaterThan(0);
     expect(order.item.name).to.equal("shoes");
+  })
+
+  it("update the contract owner balance",async()=>{
+    await transaction.wait();
+    transaction=await dappazon.connect(buyer).buy(1,{value:tokens(1)})
+    const result=await ethers.provider.getBalance(deployer.address);
+    console.log(result.toString());
+    expect(result.toString()).to.equal(balanceBefore);
+    // console.log(typeof result);
+    // console.log(result)
+    // console.log(balanceBefore)
+  })
+
+  it("update the contract balance",async()=>{ 
+    await transaction.wait();
+    const result=await ethers.provider.getBalance(dappazon.address);
+    expect(result).to.equal(0);
   })
 })
