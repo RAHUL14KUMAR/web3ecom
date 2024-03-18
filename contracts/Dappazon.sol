@@ -17,6 +17,16 @@ contract Dappazon {
     mapping(uint256=>Item)public items;
     event List(string name,uint256 code,uint quantity);
 
+    struct Order{
+        uint256 time;
+        Item item;
+    }
+
+    // here address is the buyer address and we count total number of order that buyer have
+    mapping(address=>uint256) public orderCount;
+
+    mapping (address=>mapping(uint256=>Order)) public orders;
+
     constructor(){
         owner=msg.sender;
     }
@@ -35,12 +45,20 @@ contract Dappazon {
 
     // buy the product
     function buy(uint256 _id) public payable{
-        // receive crypto->send the ether in the contarct
-        
+        // receive crypto->send the ether in the contarct that why this function is payable
+
+        // fetch the items
+        Item memory item=items[_id];
 
         // create an order
+        Order memory order=Order(block.timestamp,item);
+
+        // save order to chain
+        orderCount[msg.sender]++;
+        orders[msg.sender][orderCount[msg.sender]]=order;
 
         // substrack stack
+        items[_id].stock=item.stock-1;
 
         // emit event
     }

@@ -55,4 +55,11 @@ describe("Dappazon", async() => {
 
     expect(result).to.equal(tokens(1))
   })
+
+  it("update buyer order count",async()=>{
+    await transaction.wait();
+    transaction=await dappazon.connect(buyer).buy(1,{value:tokens(1)})
+    const res=await dappazon.orderCount(buyer.address);
+    expect(res.toNumber()).to.equal(1);
+  })
 })
