@@ -47,4 +47,12 @@ describe("Dappazon", async() => {
   it("emit list event",()=>{
     expect(transaction).to.emit(dappazon,"List")
   })
+
+  it("should updtae the contract balance",async()=>{
+    await transaction.wait();
+    transaction=await dappazon.connect(buyer).buy(1,{value:tokens(1)})
+    const result=await ethers.provider.getBalance(dappazon.address);
+
+    expect(result).to.equal(tokens(1))
+  })
 })

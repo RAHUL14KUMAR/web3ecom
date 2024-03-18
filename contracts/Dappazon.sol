@@ -34,6 +34,16 @@ contract Dappazon {
 
 
     // buy the product
+    function buy(uint256 _id) public payable{
+        // receive crypto->send the ether in the contarct
+        
+
+        // create an order
+
+        // substrack stack
+
+        // emit event
+    }
 
 
     // withdraw funds
