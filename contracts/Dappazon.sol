@@ -15,6 +15,7 @@ contract Dappazon {
         uint256 stock;
     }
     mapping(uint256=>Item)public items;
+    event List(string name,uint256 code,uint quantity);
 
     constructor(){
         owner=msg.sender;
@@ -28,6 +29,7 @@ contract Dappazon {
         );
 
         items[_id]=item;
+        emit List(_name,_price,_stock);
     }
 
 

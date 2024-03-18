@@ -43,4 +43,8 @@ describe("Dappazon", async() => {
     const item=await dappazon.items(1);
     expect(item.id).to.equal(1);
   })
+
+  it("emit list event",()=>{
+    expect(transaction).to.emit(dappazon,"List")
+  })
 })
